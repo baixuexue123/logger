@@ -1,4 +1,4 @@
-package main
+package logger
 
 import (
 	"fmt"
@@ -9,19 +9,20 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
+var Logger *zap.Logger
+
 func initLogger(logpath string, loglevel string) *zap.Logger {
 
 	hook := lumberjack.Logger{
-		Filename:   logpath, // 日志文件路径
-		MaxSize:    128,     // megabytes
-		MaxBackups: 30,      // 最多保留30个备份
-		MaxAge:     7,       // days
+		Filename:   logpath,
+		MaxSize:    128,
+		MaxBackups: 30,
+		MaxAge:     7,
 		Compress:   false,
 	}
 
 	w := zapcore.AddSync(&hook)
 
-	// 设置日志级别
 	var level zapcore.Level
 	switch loglevel {
 	case "debug":
@@ -43,8 +44,6 @@ func initLogger(logpath string, loglevel string) *zap.Logger {
 	)
 
 	logger := zap.New(core)
-	logger.Info("DefaultLogger init success")
-
 	return logger
 }
 
